@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Money Explorer: hostel expense dashboard</title>
+<style>
+:root{--bg:#f3f6f5;--card:#fff;--ink:#14211f;--mut:#5d6f6b;--ln:#dde5e2;--ac:#0f766e;--acx:#fff;--bad:#d92d20;--warn:#b45309;--ok:#15803d;--soft:#eaf1ef;--f:#e67700;--a:#3b82f6;--t:#0e9f8e;--k:#8b5cf6;--l:#e11d74;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d1514;--card:#142120;--ink:#e6f0ee;--mut:#8fa8a3;--ln:#243735;--ac:#2dd4bf;--acx:#05211d;--bad:#ff7a6e;--warn:#fbbf24;--ok:#4ade80;--soft:#1a2c2a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0d1514;--card:#142120;--ink:#e6f0ee;--mut:#8fa8a3;--ln:#243735;--ac:#2dd4bf;--acx:#05211d;--bad:#ff7a6e;--warn:#fbbf24;--ok:#4ade80;--soft:#1a2c2a;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+.wrap{max-width:1120px;margin:0 auto;padding:16px 14px 32px}
+header{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px}
+h1{margin:0;font:700 clamp(1.3rem,3.5vw,1.8rem)/1.15 Georgia,"Times New Roman",serif}
+.sub{margin:3px 0 0;color:var(--mut)}
+.acts{display:flex;gap:8px;flex-wrap:wrap}
+button,select,input{font:inherit;color:var(--ink)}
+button{background:var(--card);border:1px solid var(--ln);border-radius:8px;padding:8px 13px;min-height:40px;cursor:pointer}
+button:hover{border-color:var(--ac)}
+button.pri{background:var(--ac);color:var(--acx);border-color:var(--ac);font-weight:600}
+button[aria-pressed=true]{background:var(--ac);color:var(--acx);border-color:var(--ac)}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.g{display:grid;gap:14px;margin-bottom:14px}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.c{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:16px;min-width:0}
+.c h2{margin:0 0 10px;font-size:1rem}
+.k{color:var(--mut);font-size:.82rem}
+.n{font:700 1.7rem/1.2 ui-sans-serif,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.bar{height:8px;background:var(--soft);border-radius:4px;overflow:hidden;margin-top:8px}
+.bar i{display:block;height:100%;background:var(--ac);border-radius:4px;transition:width .25s}
+.bad{color:var(--bad)}.okc{color:var(--ok)}
+.bdn{display:grid;grid-template-columns:150px 1fr;gap:14px;align-items:center}
+.lg{display:grid;gap:7px}
+.lr{display:grid;grid-template-columns:10px 1fr auto;gap:8px;align-items:center;font-size:.88rem;transition:opacity .2s}
+.lr b{font-variant-numeric:tabular-nums}
+.dot{width:10px;height:10px;border-radius:3px}
+.pl input[type=range]{width:100%;accent-color:var(--ac);height:30px}
+.pl .row{display:flex;justify-content:space-between;align-items:baseline}
+.gauge{max-width:260px;margin:0 auto}
+.alert{border-left:4px solid var(--warn)}
+.al{display:flex;gap:10px;justify-content:space-between;align-items:center;flex-wrap:wrap;padding:10px 0;border-top:1px solid var(--ln)}
+.al:first-of-type{border-top:0}
+.al .b{display:flex;gap:8px}
+.tb{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}
+.tb input[type=search],.tb select,dialog input,dialog select{background:var(--bg);border:1px solid var(--ln);border-radius:8px;padding:8px 10px;min-height:40px}
+.tb input[type=search]{flex:1 1 180px;min-width:0}
+.pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.pills button{border-radius:999px;padding:5px 13px;min-height:36px;font-size:.88rem}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:.78rem;color:var(--mut);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--ln)}
+td{padding:10px 8px;border-bottom:1px solid var(--ln);vertical-align:middle}
+td.a,th.a{text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+tr.dup td{opacity:.6}tr.dup td.a{text-decoration:line-through}
+.chip{font-size:.74rem;border-radius:999px;padding:2px 9px;border:1px solid currentColor;white-space:nowrap}
+.s-Cleared{color:var(--ok)}.s-Pending{color:var(--warn)}.s-Duplicate{color:var(--bad)}
+.cat{display:inline-flex;gap:7px;align-items:center}
+.empty{color:var(--mut);padding:16px 8px;text-align:center}
+dialog{border:1px solid var(--ln);border-radius:12px;background:var(--card);color:var(--ink);padding:18px;width:min(92vw,380px)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+dialog h2{margin:0 0 10px}
+dialog label{display:block;margin-top:10px;font-size:.88rem;color:var(--mut)}
+dialog input,dialog select{width:100%;margin-top:3px;color:var(--ink)}
+.err{color:var(--bad);font-size:.85rem;min-height:1.3em;margin:6px 0 0}
+@media (max-width:860px){.g3,.g2{grid-template-columns:1fr}}
+@media (max-width:620px){
+.bdn{grid-template-columns:1fr}.bdn svg{max-width:170px;margin:0 auto}
+thead{display:none}
+tr{display:grid;grid-template-columns:1fr auto;grid-template-areas:"v a" "c s" "d d";gap:2px 8px;padding:10px 0;border-bottom:1px solid var(--ln)}
+td{display:block;border:0;padding:0}
+td.v{grid-area:v;font-weight:600}td.a{grid-area:a}td.c{grid-area:c}td.s{grid-area:s;text-align:right}td.d{grid-area:d;color:var(--mut);font-size:.8rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div><h1>Money Explorer</h1><p class="sub" id="sub"></p></div>
+<div class="acts"><button class="pri" id="add">Add quick expense</button><button id="reset">Reset demo data</button><button id="theme" aria-label="Toggle light or dark theme">Theme</button></div>
+</header>
+<div class="g g3">
+<div class="c"><div class="k">Total spent this month</div><div class="n" id="mS"></div><div class="k" id="mSp"></div></div>
+<div class="c"><div class="k">Monthly budget cap</div><div class="n" id="mB"></div><div class="bar"><i id="mBb"></i></div><div class="k" id="mBt" style="margin-top:6px"></div></div>
+<div class="c"><div class="k" id="mFk">Showing</div><div class="n" id="mF"></div><div class="k" id="mFt"></div></div>
+</div>
+<div class="g g2">
+<section class="c" aria-labelledby="hb"><h2 id="hb">Category breakdown</h2>
+<div class="bdn"><svg id="dn" viewBox="0 0 42 42" role="img" aria-label="Spending by category donut chart"></svg><div class="lg" id="lg"></div></div></section>
+<section class="c pl" aria-labelledby="hp"><h2 id="hp">Savings target</h2>
+<div class="row"><label for="tg" class="k">Save this month</label><b id="tv"></b></div>
+<input type="range" id="tg" min="500" max="10000" step="100" value="3000">
+<div class="gauge"><svg viewBox="0 0 100 62" role="img" aria-label="Safe daily allowance gauge"><path d="M10 55A40 40 0 0 1 90 55" fill="none" stroke="var(--soft)" stroke-width="9" stroke-linecap="round" pathLength="100"/><path id="gf" d="M10 55A40 40 0 0 1 90 55" fill="none" stroke="var(--ac)" stroke-width="9" stroke-linecap="round" pathLength="100" stroke-dasharray="0 100"/><text id="gt" x="50" y="48" text-anchor="middle" font-size="14" font-weight="700" fill="var(--ink)"></text><text x="50" y="59" text-anchor="middle" font-size="5.5" fill="var(--mut)">safe to spend per day</text></svg></div>
+<div class="k" id="pd" style="text-align:center"></div></section>
+</div>
+<section class="c alert g" style="display:block" aria-labelledby="hd"><h2 id="hd">Possible duplicate charges</h2><div id="dups" aria-live="polite"></div></section>
+<section class="c" aria-labelledby="hl"><h2 id="hl">Transaction ledger</h2>
+<div class="pills" id="pills" role="group" aria-label="Category filter"></div>
+<div class="tb"><input type="search" id="q" placeholder="Search vendor" aria-label="Search by vendor"><select id="st" aria-label="Status filter"><option value="all">All statuses</option><option>Cleared</option><option>Pending</option><option>Duplicate</option></select></div>
+<table><thead><tr><th>Date</th><th>Vendor</th><th>Category</th><th>Status</th><th class="a">Amount</th></tr></thead><tbody id="tbd"></tbody></table>
+</section>
+</div>
+<dialog id="dlg"><form id="fm" novalidate><h2>Add quick expense</h2>
+<label>Amount (₹)<input type="number" id="fa" min="1" step="1" inputmode="numeric" autofocus></label>
+<label>Vendor<input type="text" id="fv" maxlength="40"></label>
+<label>Category<select id="fc"></select></label>
+<p class="err" id="fe" role="alert"></p>
+<div class="acts" style="justify-content:flex-end;margin-top:6px"><button type="button" id="fx">Cancel</button><button class="pri" type="submit">Add expense</button></div></form></dialog>
+<script>
+(function(){
+"use strict";
+var $=function(i){return document.getElementById(i)};
+var BUD=12000,now=new Date(),Y=now.getFullYear(),M=now.getMonth(),today=now.getDate(),dim=new Date(Y,M+1,0).getDate(),left=dim-today+1;
+var CATS=[["food","Food/Mess","var(--f)"],["acad","Academics","var(--a)"],["travel","Travel","var(--t)"],["tech","Tech/Subs","var(--k)"],["leisure","Leisure","var(--l)"]];
+var PILLS=[["all","All"],["food","Food/Mess"],["travel","Travel"],["acad","Academics"],["tech","Tech"],["leisure","Leisure"]];
+var cn={};CATS.forEach(function(c){cn[c[0]]=c});
+var fmt=new Intl.NumberFormat("en-IN",{style:"currency",currency:"INR",maximumFractionDigits:0});
+function R(n){return fmt.format(Math.round(n))}
+function esc(s){return String(s).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+function ts(ago,h,mi){return new Date(Y,M,Math.max(1,today-ago),ago===0?Math.min(h,now.getHours()):h,mi).getTime()}
+var SEED=[[8,9,0,"Hostel Mess: monthly fee",4200,"food","Cleared"],[7,13,5,"Campus Cafeteria",85,"food","Cleared"],[7,16,20,"Notebooks & Stationery",460,"acad","Cleared"],[6,8,0,"Spotify Student",59,"tech","Cleared"],[5,18,0,"Metro Smart Card Reload",200,"travel","Cleared"],[4,17,0,"Metro Smart Card Reload",200,"travel","Cleared"],[3,20,0,"KFC",349,"food","Cleared"],[3,20,12,"KFC",349,"food","Pending"],[2,9,10,"Campus Cafeteria",60,"food","Cleared"],[2,21,0,"BookMyShow",280,"leisure","Cleared"],[1,11,0,"Jio Mobile Recharge",299,"tech","Cleared"],[1,15,0,"Xerox & Printouts",45,"acad","Cleared"],[1,19,0,"Auto to Railway Station",140,"travel","Cleared"],[0,13,0,"Swiggy",252,"food","Pending"],[0,10,0,"Udemy: DSA course",449,"acad","Cleared"]];
+var tx,dis,nid,fc="all",fq="",fs="all";
+function load(){nid=0;dis={};tx=SEED.map(function(s){return{id:nid++,ts:ts(s[0],s[1],s[2]),v:s[3],a:s[4],c:s[5],s:s[6]}})}
+function spentOf(l){return l.reduce(function(t,x){return t+(x.s==="Duplicate"?0:x.a)},0)}
+function dt(t){var d=new Date(t);return d.toLocaleDateString("en-IN",{day:"2-digit",month:"short"})+" "+d.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",hour12:false})}
+function gap(ms){var m=Math.round(ms/60000);return m<60?m+" min":Math.floor(m/60)+"h "+(m%60)+"m"}
+function dupes(){var a=tx.filter(function(x){return x.s!=="Duplicate"}).sort(function(p,q){return p.ts-q.ts}),o=[],seen={};
+for(var i=0;i<a.length;i++)for(var j=i+1;j<a.length;j++){var p=a[i],q=a[j];
+if(p.a===q.a&&p.v.toLowerCase()===q.v.toLowerCase()&&q.ts-p.ts<=864e5&&!dis[q.id]&&!seen[q.id]){seen[q.id]=1;o.push([p,q])}}return o}
+function render(){
+var tot=spentOf(tx),vis=tx.filter(function(x){return(fc==="all"||x.c===fc)&&(fs==="all"||x.s===fs)&&x.v.toLowerCase().indexOf(fq)>-1}).sort(function(p,q){return q.ts-p.ts});
+$("mS").textContent=R(tot);$("mSp").textContent=Math.round(tot/BUD*100)+"% of budget used";
+$("mB").textContent=R(BUD);var pc=tot/BUD;$("mBb").style.width=Math.min(100,pc*100)+"%";$("mBb").style.background=pc>1?"var(--bad)":pc>.75?"var(--warn)":"var(--ac)";
+var rem=BUD-tot;$("mBt").innerHTML=rem>=0?R(rem)+" left":'<span class="bad">'+R(-rem)+" over budget</span>";
+var sel=PILLS.filter(function(p){return p[0]===fc})[0][1],fl=spentOf(tx.filter(function(x){return fc==="all"||x.c===fc}));
+$("mFk").textContent=fc==="all"?"All categories":sel;$("mF").textContent=R(fl);$("mFt").textContent=Math.round(tot?fl/tot*100:0)+"% of total spent";
+/* breakdown */
+var sums=CATS.map(function(c){return spentOf(tx.filter(function(x){return x.c===c[0]}))}),cum=0,h='<circle cx="21" cy="21" r="15.9155" fill="none" stroke="var(--soft)" stroke-width="5"/>',lg="";
+CATS.forEach(function(c,i){var p=tot?sums[i]/tot*100:0,dim=fc!=="all"&&fc!==c[0];
+if(p>0)h+='<circle cx="21" cy="21" r="15.9155" fill="none" stroke="'+c[2]+'" stroke-width="5" stroke-dasharray="'+p.toFixed(2)+' '+(100-p).toFixed(2)+'" stroke-dashoffset="'+(-cum).toFixed(2)+'" transform="rotate(-90 21 21)" opacity="'+(dim?.25:1)+'"/>';
+cum+=p;lg+='<div class="lr" style="opacity:'+(dim?.45:1)+'"><span class="dot" style="background:'+c[2]+'"></span><span>'+c[1]+'</span><b>'+R(sums[i])+'</b></div>'});
+h+='<text x="21" y="22" text-anchor="middle" font-size="4.6" font-weight="700" fill="var(--ink)">'+R(tot)+'</text><text x="21" y="27" text-anchor="middle" font-size="2.8" fill="var(--mut)">spent</text>';
+$("dn").innerHTML=h;$("lg").innerHTML=lg;
+/* planner */
+var T=+$("tg").value,delta=BUD-tot-T,safe=Math.max(0,delta)/left,ideal=Math.max(1,(BUD-T)/dim),r=Math.min(1,safe/ideal);
+$("tv").textContent=R(T);$("gt").textContent=R(safe);
+$("gf").setAttribute("stroke-dasharray",(r*100).toFixed(1)+" 100");$("gf").setAttribute("stroke",delta<=0?"var(--bad)":r>=.75?"var(--ok)":r>=.4?"var(--warn)":"var(--bad)");
+$("pd").innerHTML=delta>=0?"After saving "+R(T)+", you have <b>"+R(delta)+"</b> left for "+left+" days.":'<span class="bad">You’re '+R(-delta)+" short of this target. Lower it or cut spending.</span>";
+/* duplicates */
+var d=dupes(),dh="";
+d.forEach(function(p){dh+='<div class="al"><div><b>'+esc(p[1].v)+" · "+R(p[1].a)+'</b> charged twice<div class="k">'+gap(p[1].ts-p[0].ts)+" apart ("+dt(p[0].ts)+" and "+dt(p[1].ts)+')</div></div><div class="b"><button class="pri" data-act="c" data-id="'+p[1].id+'">Confirm Duplicate</button><button data-act="d" data-id="'+p[1].id+'">Dismiss</button></div></div>'});
+$("dups").innerHTML=dh||'<div class="okc">No suspicious charges. Same vendor and amount within 24 hours would show up here.</div>';
+/* ledger */
+var rows="";
+vis.forEach(function(x){var c=cn[x.c];rows+='<tr class="'+(x.s==="Duplicate"?"dup":"")+'"><td class="d">'+dt(x.ts)+'</td><td class="v">'+esc(x.v)+'</td><td class="c"><span class="cat"><span class="dot" style="background:'+c[2]+'"></span>'+c[1]+'</span></td><td class="s"><span class="chip s-'+x.s+'">'+x.s+'</span></td><td class="a">'+R(x.a)+'</td></tr>'});
+$("tbd").innerHTML=rows||'<tr><td colspan="5" class="empty">No transactions match these filters.</td></tr>'}
+/* wiring */
+PILLS.forEach(function(p){var b=document.createElement("button");b.textContent=p[1];b.dataset.k=p[0];b.setAttribute("aria-pressed",String(p[0]==="all"));
+b.addEventListener("click",function(){fc=p[0];pills();render()});$("pills").appendChild(b)});
+function pills(){[].forEach.call($("pills").children,function(b){b.setAttribute("aria-pressed",String(b.dataset.k===fc))})}
+CATS.forEach(function(c){var o=document.createElement("option");o.value=c[0];o.textContent=c[1];$("fc").appendChild(o)});
+$("q").addEventListener("input",function(){fq=this.value.trim().toLowerCase();render()});
+$("st").addEventListener("change",function(){fs=this.value;render()});
+$("tg").addEventListener("input",render);
+$("dups").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;var id=+b.dataset.id;
+if(b.dataset.act==="d")dis[id]=1;else tx.forEach(function(x){if(x.id===id)x.s="Duplicate"});render()});
+$("add").addEventListener("click",function(){$("fe").textContent="";$("dlg").showModal()});
+$("fx").addEventListener("click",function(){$("dlg").close()});
+$("fm").addEventListener("submit",function(e){e.preventDefault();var a=Math.round(+$("fa").value),v=$("fv").value.trim();
+if(!(a>0)){$("fe").textContent="Enter an amount above ₹0.";return}
+if(!v){$("fe").textContent="Enter a vendor name.";return}
+tx.push({id:nid++,ts:Date.now(),v:v,a:a,c:$("fc").value,s:"Cleared"});$("fm").reset();$("dlg").close();render()});
+$("reset").addEventListener("click",function(){load();fc="all";fq="";fs="all";$("q").value="";$("st").value="all";$("tg").value=3000;$("fm").reset();pills();render()});
+$("theme").addEventListener("click",function(){var r=document.documentElement,dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme:dark)").matches;r.dataset.theme=dark?"light":"dark"});
+$("sub").textContent="Hostel budget for "+now.toLocaleDateString("en-IN",{month:"long",year:"numeric"})+" · "+left+" days left including today";
+load();render();
+})();
+</script>
+</body>
+</html>

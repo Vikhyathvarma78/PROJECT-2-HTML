@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>4-stage borewell submersible pump: interactive cutaway</title>
+<style>
+:root{--bg:#eaf0ef;--ink:#10262e;--mut:#4c6670;--pan:#fff;--ln:#c4d3d6;--steel:#9fb0b8;--steel2:#6f858f;--bowl:#c3cfd4;--water:#1f6f8d;--wh:#1aa6c9;--brass:#b98a1e;--cu:#c8642b;--hi:#e0a21b;--lam:#7e909a;--warn:#c4402b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a151b;--ink:#dcebee;--mut:#8aa5ae;--pan:#11222a;--ln:#24404a;--steel:#4d636d;--steel2:#7a929c;--bowl:#2a3f49;--water:#0d3d52;--wh:#5fe3ff;--brass:#d9a93a;--cu:#e0783a;--hi:#ffc83d;--lam:#3b5360;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a151b;--ink:#dcebee;--mut:#8aa5ae;--pan:#11222a;--ln:#24404a;--steel:#4d636d;--steel2:#7a929c;--bowl:#2a3f49;--water:#0d3d52;--wh:#5fe3ff;--brass:#d9a93a;--cu:#e0783a;--hi:#ffc83d;--lam:#3b5360;color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;overflow-x:hidden}
+.wrap{max-width:1100px;margin:0 auto;padding:16px 14px 28px}
+h1{font:700 clamp(1.25rem,3.4vw,1.8rem)/1.15 Georgia,"Times New Roman",serif;margin:0 0 4px}
+.sub{margin:0 0 14px;color:var(--mut);max-width:62ch}
+.tele{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.t{background:var(--pan);border:1px solid var(--ln);border-radius:8px;padding:8px 10px;min-width:0}
+.t span{display:block;font-size:.74rem;color:var(--mut)}
+.t b{font:600 clamp(1.1rem,3vw,1.6rem)/1.2 ui-monospace,"SF Mono",Menlo,monospace;font-variant-numeric:tabular-nums}
+.t u{text-decoration:none;font-size:.75rem;color:var(--mut);margin-left:3px}
+.t i{display:block;height:4px;background:var(--ln);border-radius:2px;margin-top:5px;overflow:hidden}
+.t em{display:block;height:100%;width:0;background:var(--wh)}
+.t.warn b{color:var(--warn)}.t.warn em{background:var(--warn)}
+.grid{display:grid;grid-template-columns:minmax(0,400px) minmax(0,1fr);gap:16px;align-items:start}
+.fig{margin:0;background:var(--pan);border:1px solid var(--ln);border-radius:10px;padding:8px}
+#pump{display:block;width:100%;height:auto;max-height:84vh}
+figcaption{font-size:.84rem;color:var(--mut);padding:4px 6px 2px}
+#status{display:block;min-height:5.4em}
+.panel{background:var(--pan);border:1px solid var(--ln);border-radius:10px;padding:14px;margin-bottom:14px}
+.panel h2{font-size:1rem;margin:0 0 10px}
+label{display:flex;justify-content:space-between;font-size:.9rem;margin-top:12px}
+label:first-of-type{margin-top:0}
+output{font:600 .9rem ui-monospace,Menlo,monospace}
+input[type=range]{width:100%;accent-color:var(--wh);margin:6px 0 0;height:28px}
+.tabs{display:flex;gap:6px;margin-top:6px}
+button{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--ln);border-radius:7px;padding:8px 12px;cursor:pointer;min-height:40px}
+button:hover{border-color:var(--wh)}
+.tabs button{flex:1}
+button[aria-pressed=true]{background:var(--wh);color:#04202a;border-color:var(--wh);font-weight:600}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.row button{flex:1 1 140px}
+:focus-visible{outline:2px solid var(--hi);outline-offset:2px}
+:root{--ok:#0f9d7a;--amb:#b87a00}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ok:#4af2c0;--amb:#ffc83d}}
+:root[data-theme="dark"]{--ok:#4af2c0;--amb:#ffc83d}
+.t.e-ok b{color:var(--ok)}.t.e-ok em{background:var(--ok)}
+.t.e-mid b{color:var(--amb)}.t.e-mid em{background:var(--amb)}
+.t.e-bad b{color:var(--warn)}.t.e-bad em{background:var(--warn)}
+#alert{min-height:50px;margin-bottom:6px}
+.chip{display:block;padding:6px 10px;border-radius:6px;font:600 .78rem/1.25 ui-sans-serif,system-ui,sans-serif}
+.chip.r{background:var(--warn);color:#fff}.chip.a{background:var(--amb);color:#1a1200}
+#qh{display:block;width:100%;height:auto;aspect-ratio:2/1}
+#card h3{margin:0 0 6px;font-size:1.05rem}
+#card dl{margin:0}#card dt{font-weight:600;font-size:.82rem;color:var(--mut);margin-top:8px}#card dd{margin:2px 0 0}
+#card .hint{color:var(--mut);margin:0}
+.part{cursor:pointer}.part:hover{opacity:.88}
+.sel{filter:drop-shadow(0 0 4px var(--hi))}
+.stg.off .bowl,.stg.off .imp{opacity:.35}
+.stg.on .imp{filter:drop-shadow(0 0 3px var(--wh))}
+#struct{transition:opacity .3s}
+#pump.stream #struct{opacity:.2}
+#sl{display:none}#pump.stream #sl{display:block}
+#pg{filter:drop-shadow(0 0 3px var(--wh))}
+.lb{font:10px ui-sans-serif,system-ui,sans-serif;fill:var(--mut)}
+@media (max-width:860px){.grid{grid-template-columns:1fr}.fig{max-width:420px;margin:0 auto;width:100%}.tele{grid-template-columns:repeat(2,1fr)}.tele .t:last-child{grid-column:1/-1}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Inside a 4-stage borewell submersible pump</h1>
+<p class="sub">A 100 mm (4-inch) deep-well pump in section. Change speed, depth and stage count, then click any part to inspect it.</p>
+<section class="tele" aria-label="Live telemetry">
+<div class="t"><span>Motor speed</span><b id="vR">0</b><u>RPM</u><i><em id="bR"></em></i></div>
+<div class="t"><span>Flow rate</span><b id="vQ">0</b><u>LPM</u><i><em id="bQ"></em></i></div>
+<div class="t"><span>Total dynamic head</span><b id="vH">0</b><u>m</u><i><em id="bH"></em></i></div>
+<div class="t" id="tL"><span>Motor load</span><b id="vL">0</b><u>HP</u><i><em id="bL"></em></i></div>
+<div class="t" id="tE"><span>Hydraulic efficiency</span><b id="vE">0</b><u>%</u><i><em id="bE"></em></i></div>
+</section>
+<div class="grid">
+<figure class="fig">
+<svg id="pump" viewBox="0 0 360 790" role="img" aria-label="Animated cutaway of a four-stage submersible pump">
+<defs>
+<pattern id="pv" width="14" height="14" patternUnits="userSpaceOnUse"><rect width="14" height="14" fill="var(--steel)"/><path d="M0 14L14 0" stroke="var(--steel2)" stroke-width="3"/></pattern>
+<pattern id="pk" width="5" height="10" patternUnits="userSpaceOnUse"><rect width="5" height="10" fill="var(--steel2)"/><rect x="1" width="1.6" height="10" fill="var(--bowl)"/></pattern>
+<pattern id="lam" width="6" height="4" patternUnits="userSpaceOnUse"><rect width="6" height="4" fill="var(--lam)"/><rect y="3" width="6" height="1" fill="var(--bowl)"/></pattern>
+<pattern id="cu" width="4" height="4" patternUnits="userSpaceOnUse"><rect width="4" height="4" fill="var(--cu)"/><path d="M0 4L4 0" stroke="var(--brass)" stroke-width="1"/></pattern>
+</defs>
+<g id="struct">
+<g id="walls" fill="var(--steel)"><rect x="108" y="135" width="10" height="340"/><rect x="242" y="135" width="10" height="340"/></g>
+<g id="stages"></g>
+<g class="part" data-part="nrv">
+<rect x="138" y="58" width="84" height="76" rx="4" fill="var(--steel)"/>
+<rect x="154" y="62" width="52" height="66" fill="var(--water)"/>
+<rect x="154" y="100" width="6" height="7" fill="var(--steel2)"/><rect x="200" y="100" width="6" height="7" fill="var(--steel2)"/>
+<path id="spr" d="M180 68l-9 4 18 4-18 4 18 4-18 4 9 3" fill="none" stroke="var(--brass)" stroke-width="2"/>
+<g id="disc"><rect x="156" y="94" width="48" height="6" rx="2" fill="var(--brass)"/></g>
+<rect x="160" y="6" width="40" height="56" fill="var(--steel)"/><rect x="167" y="6" width="26" height="56" fill="var(--water)"/><rect x="150" y="6" width="60" height="9" rx="2" fill="var(--steel2)"/>
+</g>
+<g class="part" data-part="strainer">
+<rect x="108" y="475" width="144" height="10" fill="var(--steel)"/><rect x="108" y="525" width="144" height="10" fill="var(--steel)"/>
+<rect x="128" y="485" width="104" height="40" fill="var(--water)"/>
+<g id="slots" fill="var(--water)"></g>
+<rect x="108" y="485" width="20" height="40" fill="var(--steel)" opacity=".55"/><rect x="232" y="485" width="20" height="40" fill="var(--steel)" opacity=".55"/>
+</g>
+<g class="part" data-part="bearing">
+<rect x="120" y="535" width="120" height="42" fill="var(--steel)"/><rect x="132" y="540" width="96" height="32" fill="var(--bowl)"/>
+<rect x="150" y="548" width="60" height="8" rx="2" fill="var(--brass)"/>
+<g fill="var(--steel2)"><rect x="152" y="557" width="12" height="6"/><rect x="170" y="557" width="12" height="6"/><rect x="188" y="557" width="12" height="6"/><rect x="204" y="557" width="6" height="6"/></g>
+</g>
+<g class="part" data-part="stator">
+<rect x="108" y="577" width="144" height="195" rx="10" fill="var(--steel)"/>
+<rect x="118" y="592" width="30" height="160" fill="url(#lam)"/><rect x="212" y="592" width="30" height="160" fill="url(#lam)"/>
+<rect x="148" y="592" width="10" height="160" fill="url(#cu)"/><rect x="202" y="592" width="10" height="160" fill="url(#cu)"/>
+<rect x="162" y="592" width="36" height="160" fill="url(#pk)"/>
+</g>
+<rect id="shaft" x="175" y="135" width="10" height="617" fill="url(#pk)"/>
+<g id="lbl"></g>
+</g>
+<g id="sl" fill="none" stroke="var(--wh)" stroke-width="2.2" stroke-linecap="round" stroke-dasharray="12 9" opacity=".85"><path id="s1"/><path id="s2" transform="translate(360 0) scale(-1 1)"/></g>
+<g id="pg"></g>
+</svg>
+<figcaption><div id="alert" aria-live="polite"><span id="chip" class="chip" style="visibility:hidden">.</span></div><span id="status"></span></figcaption>
+</figure>
+<aside>
+<div class="panel">
+<h2>Controls</h2>
+<label for="rpm">Motor speed <output id="oR">2850 RPM</output></label>
+<input type="range" id="rpm" min="0" max="3000" step="10" value="2850">
+<label for="hd">Depth / head <output id="oH">50 m</output></label>
+<input type="range" id="hd" min="10" max="120" step="1" value="50">
+<label id="stl">Active stages</label>
+<div class="tabs" role="group" aria-labelledby="stl">
+<button data-n="1" aria-pressed="false">1</button><button data-n="2" aria-pressed="false">2</button><button data-n="3" aria-pressed="false">3</button><button data-n="4" aria-pressed="true">4</button>
+</div>
+<div class="row"><button id="view">Show streamline view</button><button id="reset">Reset</button></div>
+</div>
+<div class="panel"><h2>Pump curve</h2><canvas id="qh" width="280" height="140" role="img" aria-label="Head versus flow curve with the live operating point"></canvas></div>
+<div class="panel" id="card" aria-live="polite"><p class="hint">Click the strainer, an impeller, a diffuser bowl, the thrust bearing, the NRV or the motor stator to see what it is made of and what it does.</p></div>
+</aside>
+</div>
+</div>
+<script>
+(function(){
+"use strict";
+var NS="http://www.w3.org/2000/svg",$=function(i){return document.getElementById(i)};
+var A=36,B=0.00213,RATED=2,DEF={rpm:2850,head:50,n:4};
+var S={rpmT:2850,rpm:2850,head:50,n:4,stream:false,sel:null};
+var INFO={
+strainer:["Suction strainer","Perforated stainless steel (AISI 304) screen in a cast-iron or stainless intake.","Lets water in from the borewell while stopping sand and grit that would wear the first impeller. Its open area is much larger than the discharge area, so water enters slowly and the pump doesn’t cavitate."],
+impeller:["Closed impeller","Noryl (PPO) polymer, bronze or AISI 304 stainless, with a front and back shroud around the vanes.","Spins on the shaft and slings water outward. Each stage adds roughly 36 m of head at 2850 RPM in this model. Head rises with speed squared and flow with speed (the affinity laws)."],
+bowl:["Diffuser bowl","Cast iron, AISI 304 stainless or Noryl, with fixed guide vanes.","Catches fast water leaving the impeller and slows it in widening vane passages, turning velocity into pressure. It then turns the water back to the centre and into the next impeller’s eye."],
+bearing:["Thrust bearing","Tilting-pad or carbon/ceramic thrust pads running against a brass or steel collar, in a lubricated housing at the top of the motor.","Carries the axial thrust from the impellers plus the weight of the rotor, so the shaft stays centred and the impellers don’t rub the bowls."],
+nrv:["Non-return valve (NRV)","Spring-loaded disc in a brass or stainless body, with a rubber seat.","Opens under flow and closes when the pump stops. This holds the water column in the rising main, prevents reverse spin of the impellers and softens water hammer. Watch the disc lift as flow rises."],
+stator:["Motor stator","Silicon-steel laminations with enamelled copper windings, in a water- or oil-filled sealed housing.","Creates the rotating magnetic field that drags the rotor around. At 50 Hz a 2-pole motor has a synchronous speed of 3000 RPM, so under load it runs near 2850 RPM because of slip."]};
+var NAMES={impeller:1,bowl:1};
+/* build stages */
+var st="",k,yb,yt,j,sl="",lb="";
+for(k=1;k<=4;k++){yb=475-(k-1)*85;yt=yb-85;
+st+='<g class="stg on" data-k="'+k+'"><rect class="bowl part" data-part="bowl" x="118" y="'+(yt+2)+'" width="124" height="81" rx="4" fill="var(--bowl)"/>'
++'<g fill="var(--water)"><rect x="128" y="'+(yt+8)+'" width="20" height="'+(yb-yt-38)+'"/><rect x="212" y="'+(yt+8)+'" width="20" height="'+(yb-yt-38)+'"/><rect x="126" y="'+(yb-44)+'" width="108" height="20"/><rect x="166" y="'+(yb-24)+'" width="28" height="24"/><rect x="148" y="'+(yt+6)+'" width="64" height="8"/><rect x="166" y="'+yt+'" width="28" height="16"/></g>'
++'<path d="';
+for(j=0;j<3;j++)st+='M128 '+(yt+22+j*11)+'l20 -7M232 '+(yt+22+j*11)+'l-20 -7';
+st+='" stroke="var(--steel2)" stroke-width="2" fill="none"/>'
++'<g class="part" data-part="impeller"><rect class="imp" x="134" y="'+(yb-41)+'" width="92" height="13" rx="3" fill="url(#pv)" stroke="var(--wh)" stroke-width="1.2"/><rect x="166" y="'+(yb-46)+'" width="28" height="24" rx="3" fill="var(--steel2)"/></g>'
++'</g>';
+lb+='<text class="lb" x="258" y="'+(yt+48)+'">Stage '+k+'</text>';}
+for(j=0;j<7;j++)sl+='<rect x="112" y="'+(487+j*5.2)+'" width="12" height="3"/><rect x="236" y="'+(487+j*5.2)+'" width="12" height="3"/>';
+lb+='<text class="lb" x="218" y="30">Delivery</text><text class="lb" x="228" y="84">NRV</text><text class="lb" x="258" y="488">Suction strainer</text><text class="lb" x="258" y="560">Thrust bearing</text><text class="lb" x="258" y="680">Motor</text>';
+$("stages").innerHTML=st;$("slots").innerHTML=sl;$("lbl").innerHTML=lb;
+var stgs=[].slice.call(document.querySelectorAll(".stg"));
+/* path */
+var pts=[],cum=[],L=1;
+function buildPath(){
+pts=[[298,505,1],[194,505,1],[188,490,1]];
+for(var k=1;k<=4;k++){var yb=475-(k-1)*85,yt=yb-85;
+if(k<=S.n)pts.push([188,yb-12,1],[190,yb-34,1],[222,yb-34,2.4],[222,yt+14,1.6],[196,yt+10,1.2]);
+else pts.push([188,yb-12,1],[188,yt+10,1]);}
+pts.push([194,125,1],[202,105,1],[202,85,1],[190,60,1],[180,35,1],[180,8,1]);
+cum=[0];for(var i=1;i<pts.length;i++)cum.push(cum[i-1]+Math.hypot(pts[i][0]-pts[i-1][0],pts[i][1]-pts[i-1][1]));
+L=cum[cum.length-1];
+var d="M"+pts[0][0]+","+pts[0][1];
+for(i=1;i<pts.length-1;i++){d+="Q"+pts[i][0]+","+pts[i][1]+" "+(pts[i][0]+pts[i+1][0])/2+","+(pts[i][1]+pts[i+1][1])/2}
+d+="L"+pts[pts.length-1][0]+","+pts[pts.length-1][1];
+$("s1").setAttribute("d",d);$("s2").setAttribute("d",d);}
+/* particles */
+var PN=90,parts=[],pg=$("pg");
+buildPath();
+for(var i=0;i<PN;i++){var c=document.createElementNS(NS,"circle");c.setAttribute("r","1.8");pg.appendChild(c);parts.push({d:Math.random()*L,s:i%2?1:-1,el:c});}
+/* UI */
+function setStages(n){S.n=n;[].forEach.call(document.querySelectorAll(".tabs button"),function(b){b.setAttribute("aria-pressed",String(+b.dataset.n===n))});
+stgs.forEach(function(g,i){g.setAttribute("class","stg "+(i+1<=n?"on":"off"))});buildPath();}
+function setSel(p){
+[].forEach.call(document.querySelectorAll(".sel"),function(e){e.classList.remove("sel")});
+S.sel=(S.sel===p)?null:p;var c=$("card");
+if(!S.sel){c.innerHTML='<p class="hint">Click the strainer, an impeller, a diffuser bowl, the thrust bearing, the NRV or the motor stator to see what it is made of and what it does.</p>';return;}
+[].forEach.call(document.querySelectorAll('[data-part="'+S.sel+'"]'),function(e){e.classList.add("sel")});
+var f=INFO[S.sel];c.innerHTML="<h3>"+f[0]+"</h3><dl><dt>Material</dt><dd>"+f[1]+"</dd><dt>Function</dt><dd>"+f[2]+"</dd></dl>";}
+[].forEach.call(document.querySelectorAll(".part"),function(e){
+e.setAttribute("tabindex","0");e.setAttribute("role","button");e.setAttribute("aria-label","Inspect "+INFO[e.dataset.part][0]);
+e.addEventListener("click",function(ev){ev.stopPropagation();setSel(e.dataset.part)});
+e.addEventListener("keydown",function(ev){if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();setSel(e.dataset.part)}});});
+$("rpm").addEventListener("input",function(){S.rpmT=+this.value;$("oR").textContent=this.value+" RPM"});
+$("hd").addEventListener("input",function(){S.head=+this.value;$("oH").textContent=this.value+" m"});
+[].forEach.call(document.querySelectorAll(".tabs button"),function(b){b.addEventListener("click",function(){setStages(+b.dataset.n)})});
+function setView(v){S.stream=v;$("pump").setAttribute("class",v?"stream":"");$("view").textContent=v?"Show cutaway view":"Show streamline view";}
+$("view").addEventListener("click",function(){setView(!S.stream)});
+$("reset").addEventListener("click",function(){
+S.rpmT=DEF.rpm;S.head=DEF.head;$("rpm").value=DEF.rpm;$("hd").value=DEF.head;$("oR").textContent=DEF.rpm+" RPM";$("oH").textContent=DEF.head+" m";
+setStages(DEF.n);setView(false);if(S.sel)setSel(S.sel);});
+/* simulation */
+function hyd(){
+var s=S.rpm/2850,shut=S.n*A*s*s,q2=(A*s*s-S.head/S.n)/B,Q=q2>0?Math.sqrt(q2):0,H=Q>0?S.head:shut,eff=0,hp;
+if(Q>0){var qb=Q/(105*s),e=0.64*(1-0.9*(qb-1)*(qb-1));eff=Math.max(0.05,e);hp=Q*S.head*0.1635/eff/745.7+0.08*s;}
+else hp=S.n*0.12*s*s*s+0.08*s;
+return{s:s,shut:shut,Q:Q,H:H,eff:eff*100,hp:hp};}
+function bar(id,v,m){$(id).style.width=Math.max(0,Math.min(100,v/m*100))+"%"}
+var CC=null,ccT=0;
+function colors(t){if(!CC||t-ccT>500){ccT=t;var cs=getComputedStyle(document.documentElement),g=function(n){return cs.getPropertyValue(n).trim()};CC={ink:g("--ink"),mut:g("--mut"),ln:g("--ln"),wh:g("--wh"),warn:g("--warn")}}return CC}
+function drawQH(h,t){
+var cv=$("qh"),dpr=window.devicePixelRatio||1,bw=Math.round((cv.clientWidth||280)*dpr);
+if(cv.width!==bw){cv.width=bw;cv.height=Math.round(bw/2)}
+var c=cv.getContext("2d"),k=colors(t),X0=36,X1=272,Y0=114,Y1=8,i;
+function fx(q){return X0+q/150*(X1-X0)}function fy(m){return Y0-m/160*(Y0-Y1)}
+c.setTransform(bw/280,0,0,bw/280,0,0);c.clearRect(0,0,280,140);
+c.font="9px sans-serif";c.lineWidth=1;c.strokeStyle=k.ln;c.fillStyle=k.mut;c.textAlign="right";c.textBaseline="middle";
+for(i=0;i<=4;i++){c.beginPath();c.moveTo(X0,fy(i*40));c.lineTo(X1,fy(i*40));c.stroke();c.fillText(String(i*40),X0-4,fy(i*40))}
+c.textAlign="center";c.textBaseline="top";
+for(i=0;i<=3;i++){c.beginPath();c.moveTo(fx(i*50),Y1);c.lineTo(fx(i*50),Y0);c.stroke();c.fillText(String(i*50),fx(i*50),Y0+3)}
+c.fillStyle=k.ink;c.font="10px sans-serif";c.fillText("Q, flow (LPM)",(X0+X1)/2,128);
+c.save();c.translate(8,(Y0+Y1)/2);c.rotate(-Math.PI/2);c.textBaseline="middle";c.fillText("H, head (m)",0,0);c.restore();
+c.setLineDash([4,3]);c.strokeStyle=k.mut;c.beginPath();c.moveTo(X0,fy(S.head));c.lineTo(X1,fy(S.head));c.stroke();c.setLineDash([]);
+c.strokeStyle=k.wh;c.lineWidth=2;c.beginPath();var s2=h.s*h.s,go=false;
+for(var q=0;q<=150;q+=2){var H=S.n*(A*s2-B*q*q);if(H<0)break;if(go)c.lineTo(fx(q),fy(H));else{c.moveTo(fx(q),fy(H));go=true}}c.stroke();
+c.fillStyle=k.warn;c.strokeStyle="#fff";c.lineWidth=1.5;c.beginPath();c.arc(fx(h.Q),fy(S.head),5,0,6.283);c.fill();c.stroke();}
+var last=0,ph=0,dash=0,stT=0,alS="x";
+function frame(t){
+var dt=Math.min(0.05,(t-(last||t))/1000);last=t;
+S.rpm+=(S.rpmT-S.rpm)*(1-Math.exp(-dt*1.8));if(Math.abs(S.rpmT-S.rpm)<0.5)S.rpm=S.rpmT;
+var h=hyd();
+$("vR").textContent=Math.round(S.rpm);$("vQ").textContent=h.Q.toFixed(0);$("vH").textContent=h.H.toFixed(1);$("vL").textContent=h.hp.toFixed(2);$("vE").textContent=h.eff.toFixed(1);
+bar("bR",S.rpm,3000);bar("bQ",h.Q,150);bar("bH",h.H,150);bar("bL",h.hp,3);bar("bE",h.eff,70);
+var over=h.hp>2.05;$("tL").className="t"+(over?" warn":"");
+var ec=S.rpm<30?"":(h.Q===0||h.eff<25)?" e-bad":h.eff<=55?" e-mid":" e-ok";$("tE").className="t"+ec;
+var al=(h.Q===0&&S.rpm>500)?"a":over?"r":"";
+if(al!==alS){alS=al;var ch=$("chip");
+if(al==="a"){ch.textContent="SHUT-OFF HEAD: Impellers spinning but zero discharge / deadheading";ch.className="chip a";ch.style.visibility="visible"}
+else if(al==="r"){ch.textContent="OVERLOAD WARNING: High amp draw, motor load exceeds the rated 2 HP";ch.className="chip r";ch.style.visibility="visible"}
+else ch.style.visibility="hidden";}
+drawQH(h,t);
+/* rotation: patterns slide with speed */
+ph+=h.s*220*dt;
+$("pv").setAttribute("patternTransform","translate("+(ph%14)+" 0)");
+$("pk").setAttribute("patternTransform","translate("+(ph%5)+" 0)");
+/* NRV */
+var lift=Math.min(16,h.Q/7);
+$("disc").setAttribute("transform","translate(0 "+(-lift)+")");
+$("spr").setAttribute("transform","translate(0 68) scale(1 "+((26-lift)/26)+") translate(0 -68)");
+/* flow */
+var v=h.Q*1.6+(S.rpm>20?3:0),r=S.stream?2.6:1.8;
+dash-=v*dt;$("s1").setAttribute("stroke-dashoffset",dash);$("s2").setAttribute("stroke-dashoffset",dash);
+for(var i=0;i<PN;i++){var p=parts[i],sg=1;
+while(sg<cum.length-1&&cum[sg]<p.d)sg++;
+var f=(p.d-cum[sg-1])/(cum[sg]-cum[sg-1]),a=pts[sg-1],b=pts[sg],x=a[0]+(b[0]-a[0])*f,y=a[1]+(b[1]-a[1])*f;
+p.d+=v*b[2]*dt;if(p.d>L)p.d-=L;
+var fr=p.d/L,el=p.el;
+el.setAttribute("cx",(180+p.s*(x-180)).toFixed(1));el.setAttribute("cy",y.toFixed(1));el.setAttribute("r",r);
+el.setAttribute("fill","hsl(195,90%,"+(52+34*fr).toFixed(0)+"%)");
+el.setAttribute("fill-opacity",(Math.min(1,p.d/30,(L-p.d)/20)*(h.Q>0?1:0.4)).toFixed(2));}
+/* status */
+if(t-stT>200){stT=t;var m;
+if(S.rpm<30)m="Pump stopped. Raise the motor speed to start lifting water.";
+else if(h.Q>0)m="Operating point: "+h.Q.toFixed(0)+" LPM against "+S.head+" m, about "+(h.H/10.2).toFixed(1)+" bar at the delivery."+(over?" The motor is above its "+RATED+" HP rating.":"");
+else m="No flow. "+S.n+" stage"+(S.n>1?"s":"")+" at "+Math.round(S.rpm)+" RPM can only lift "+h.shut.toFixed(0)+" m, less than the "+S.head+" m head. Add stages or raise speed.";
+if($("status").textContent!==m)$("status").textContent=m;}
+requestAnimationFrame(frame);}
+document.getElementById("pump").addEventListener("click",function(){if(S.sel)setSel(S.sel)});
+requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
