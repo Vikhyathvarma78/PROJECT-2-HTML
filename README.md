@@ -1,0 +1,2 @@
+# PROJECT-2-HTML
+This project uses AI to MAKE THINGS EASY TO UNDERSTAND
